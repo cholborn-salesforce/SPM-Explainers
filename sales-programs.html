@@ -373,12 +373,51 @@ function buildScene(k) {
 
   label(`<i style="background:${hex(GREEN)}"></i><b>Milestones</b><span>CRM behavior tracked</span>`, "lbl--pillar", ["milestones"], k.world, V(ML_P.x, -1.7, 0));
 
-  // ── Outcome: a diamond / gem — achievement and revenue value ─────────────
-  const outGem = mesh(new THREE.OctahedronGeometry(0.9, 0), ORANGE, ["outcome", "all"]);
+  // ── Outcome: gem collapses/expands into 4 revenue metric tiles ───────────
+  const OUTCOME_TYPES = [
+    { name: "Ramp Time",    sub: "Time to first deal",      color: 0xB04E0F },
+    { name: "Win Rate",     sub: "Deals won / total opps",  color: 0xC23934 },
+    { name: "Cycle Length", sub: "Days to close",           color: 0xE07B39 },
+    { name: "Deal Size",    sub: "Avg closed-won value",    color: 0x9E4E1A },
+  ];
+  // 2 columns × 2 rows centered on OUT_P
+  const OUT_COL_X = [3.6, 6.4];
+  const OUT_ROW_Y = [0.85, -0.85];
+  const OUT_EXPLODED = OUTCOME_TYPES.map((_, i) => V(OUT_COL_X[i % 2], OUT_ROW_Y[Math.floor(i / 2)], 0));
+
+  // Central gem — visible when collapsed
+  const outGem = mesh(new THREE.OctahedronGeometry(0.9, 0), ORANGE, ["out-gem", "all"]);
   outGem.position.copy(OUT_P);
   outGem.rotation.y = Math.PI / 8;
   pick(outGem, { kind: "Part", title: "Outcome", desc: "The revenue metric the program is designed to move.", step: "outcome" });
-  label(`<i style="background:${hex(ORANGE)}"></i><b>Outcome</b><span>Revenue metric</span>`, "lbl--pillar", ["outcome"], k.world, V(OUT_P.x, -1.4, 0));
+  label(`<i style="background:${hex(ORANGE)}"></i><b>Outcome</b><span>Revenue metric</span>`, "lbl--pillar", ["out-gem", "outcome"], k.world, V(OUT_P.x, -1.4, 0));
+
+  // 4 metric tiles
+  const outTiles = OUTCOME_TYPES.map((t, i) => {
+    const m = mesh(box(0.6, 0.6, 0.18, 0.09), t.color, ["out-types", "all"]);
+    m.position.copy(V(OUT_P.x, 0, 0.5));
+    m.scale.setScalar(0.01);
+    pick(m, { kind: "Revenue metric", title: t.name, desc: `${t.name} — ${t.sub}.`, step: "outcome" });
+    label(`<b>${t.name}</b><span>${t.sub}</span>`, "lbl--mono", ["out-types"], k.world,
+      V(OUT_EXPLODED[i].x + 1.1, OUT_EXPLODED[i].y, 0));
+    return { mesh: m, target: OUT_EXPLODED[i] };
+  });
+
+  let outActive = false;
+  k.onStep(key => { outActive = (key === "outcome"); });
+  k.onFrame(dt => {
+    if (!k.reduced) outGem.rotation.y += dt * 0.4;
+    const speed = 6 * dt;
+    // Gem shrinks away when exploded, tiles spring out
+    const gemSc = outActive ? 0.01 : 1;
+    outGem.scale.lerp(new THREE.Vector3(gemSc, gemSc, gemSc), Math.min(speed, 1));
+    outTiles.forEach(({ mesh: m, target }) => {
+      const dest = outActive ? target : V(OUT_P.x, 0, 0.5);
+      m.position.lerp(dest, Math.min(speed, 1));
+      const sc = outActive ? 1 : 0.01;
+      m.scale.lerp(new THREE.Vector3(sc, sc, sc), Math.min(speed, 1));
+    });
+  });
 
   // ── Paths ─────────────────────────────────────────────────────────────────
   const exToMl = curve([V(EX_P.x + 0.95, 0.1, 0), V(-2.3, 0.4, 0.3), V(ML_P.x - 0.85, 0.1, 0)]);
@@ -390,14 +429,14 @@ function buildScene(k) {
 
   const WIDE = { pos: [0, 0.8, 20], look: [0, 0, 0] };
   k.setSteps({
-    overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
+    overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "out-gem"] },
     problem:    { ...WIDE, focus: ["all"], hl: [], labels: [] },
-    outcome:    { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path"], hl: ["outcome"], labels: ["outcome"] },
+    outcome:    { pos: [5, 0.3, 16], look: [5, 0, 0], focus: ["out-types", "path"], hl: ["out-types"], labels: ["out-types"] },
     milestones: { pos: [0, 0.4, 11],  look: [0, 0, 0], focus: ["milestones", "path"], hl: ["milestones"], labels: ["milestones"] },
     exercises:  { pos: [-5, 0.3, 16], look: [-5, 0, 0], focus: ["ex-types", "path"], hl: ["ex-types"], labels: ["ex-types"] },
-    builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
-    analytics:  { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path", "milestones"], hl: ["outcome"], labels: ["outcome", "milestones"] },
-    try:        { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
+    builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "out-gem"] },
+    analytics:  { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["out-gem", "path", "milestones"], hl: ["out-gem"], labels: ["out-gem", "milestones"] },
+    try:        { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "out-gem"] },
   });
   story.bindScene(k);
 
