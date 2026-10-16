@@ -303,27 +303,31 @@ function buildScene(k) {
 
   const EX_P = V(-5, 0, 0), ML_P = V(0, 0, 0), OUT_P = V(5, 0, 0);
 
-  // ── Exercises: three content cards fanned out at angles ──────────────────
-  // Like slides or cards spread on a table — suggests a content library.
-  const cardGeo = box(1.5, 1.0, 0.08, 0.07);
+  // ── Exercises: checklist panel — like the program builder item list ───────
   const exDesc = { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" };
-  const exBack = mesh(cardGeo, BLUE, ["exercises", "all"]);
-  exBack.position.copy(V(EX_P.x - 0.28, 0, -0.1));
-  exBack.rotation.y = -0.38;
-  exBack.material.opacity = 0.55; exBack.material.transparent = true;
-  pick(exBack, exDesc);
 
-  const exFront = mesh(cardGeo, BLUE, ["exercises", "all"]);
-  exFront.position.copy(V(EX_P.x + 0.28, 0, -0.1));
-  exFront.rotation.y = 0.38;
-  exFront.material.opacity = 0.55; exFront.material.transparent = true;
-  pick(exFront, exDesc);
+  // Backing card
+  const exPanel = mesh(box(2.1, 2.4, 0.12, 0.12), BLUE, ["exercises", "all"]);
+  exPanel.position.copy(EX_P);
+  pick(exPanel, exDesc);
 
-  const exCenter = mesh(cardGeo, BLUE, ["exercises", "all"]);
-  exCenter.position.copy(V(EX_P.x, 0, 0.2));
-  pick(exCenter, exDesc);
+  // Four checklist rows: small checkbox square + longer text bar
+  const rowYs = [0.72, 0.24, -0.24, -0.72];
+  const checkColor = 0xffffff, lineColor = 0xffffff;
+  rowYs.forEach(y => {
+    // Checkbox square (slightly raised off the panel face)
+    const chk = mesh(box(0.28, 0.28, 0.14, 0.05), checkColor, ["exercises", "all"]);
+    chk.position.copy(V(EX_P.x - 0.65, y, 0.08));
+    chk.material.opacity = 0.35; chk.material.transparent = true;
+    pick(chk, exDesc);
+    // Text line
+    const line = mesh(box(0.95, 0.13, 0.14, 0.04), lineColor, ["exercises", "all"]);
+    line.position.copy(V(EX_P.x + 0.15, y, 0.08));
+    line.material.opacity = 0.35; line.material.transparent = true;
+    pick(line, exDesc);
+  });
 
-  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.3, 0));
+  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.5, 0));
 
   // ── Milestones: three ascending bars — a bar chart of growing activity ───
   // Short → medium → tall, left to right, like a progress chart building up.
