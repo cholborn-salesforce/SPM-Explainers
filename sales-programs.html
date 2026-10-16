@@ -303,31 +303,60 @@ function buildScene(k) {
 
   const EX_P = V(-5, 0, 0), ML_P = V(0, 0, 0), OUT_P = V(5, 0, 0);
 
-  // ── Exercises: checklist panel — like the program builder item list ───────
-  const exDesc = { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" };
+  // ── Exercises: collapsed panel → explodes into 2-col icon list ──────────
+  const EXERCISE_TYPES = [
+    { name: "Video",            color: 0x6B49C8 },
+    { name: "Lesson",           color: 0x0176D3 },
+    { name: "Document",         color: 0x2E844A },
+    { name: "Audio Recording",  color: 0x9B59B6 },
+    { name: "Feedback Request", color: 0x1B96FF },
+    { name: "Action Item",      color: 0x0A5DA5 },
+    { name: "Scheduled Event",  color: 0x7B5EA7 },
+    { name: "Trailhead",        color: 0x032D60 },
+  ];
+  // 2 columns × 4 rows, horizontally centered on EX_P.x
+  // col 0 = left, col 1 = right
+  const COL_X = [-6.3, -3.7];
+  const ROW_Y = [1.35, 0.45, -0.45, -1.35];
+  const EXPLODED_POS = EXERCISE_TYPES.map((_, i) => V(COL_X[i % 2], ROW_Y[Math.floor(i / 2)], 0));
 
-  // Backing card
-  const exPanel = mesh(box(2.1, 2.4, 0.12, 0.12), BLUE, ["exercises", "all"]);
-  exPanel.position.copy(EX_P);
-  pick(exPanel, exDesc);
-
-  // Four checklist rows: small checkbox square + longer text bar
-  const rowYs = [0.72, 0.24, -0.24, -0.72];
-  const checkColor = 0xffffff, lineColor = 0xffffff;
-  rowYs.forEach(y => {
-    // Checkbox square (slightly raised off the panel face)
-    const chk = mesh(box(0.28, 0.28, 0.14, 0.05), checkColor, ["exercises", "all"]);
-    chk.position.copy(V(EX_P.x - 0.65, y, 0.08));
-    chk.material.opacity = 0.35; chk.material.transparent = true;
-    pick(chk, exDesc);
-    // Text line
-    const line = mesh(box(0.95, 0.13, 0.14, 0.04), lineColor, ["exercises", "all"]);
-    line.position.copy(V(EX_P.x + 0.15, y, 0.08));
-    line.material.opacity = 0.35; line.material.transparent = true;
-    pick(line, exDesc);
+  // Each tile: colored square + inline label to its right
+  const exTiles = EXERCISE_TYPES.map((t, i) => {
+    const m = mesh(box(0.6, 0.6, 0.18, 0.09), t.color, ["ex-types", "all"]);
+    m.position.copy(V(EX_P.x, 0, 2));   // start stacked at center, slightly forward
+    pick(m, { kind: "Exercise type", title: t.name, desc: `${t.name} — one of the exercise types available in Salesforce Sales Programs.`, step: "exercises" });
+    // Name label sits to the right of the tile
+    label(`<b>${t.name}</b>`, "lbl--mono", ["ex-types"], k.world,
+      V(EXPLODED_POS[i].x + 1.05, EXPLODED_POS[i].y, 0));
+    return { mesh: m, target: EXPLODED_POS[i] };
   });
 
-  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.5, 0));
+  // Collapsed checklist panel — visible on every step except "exercises"
+  const exPanel = mesh(box(2.0, 2.2, 0.15, 0.12), BLUE, ["ex-panel", "all"]);
+  exPanel.position.copy(EX_P);
+  pick(exPanel, { kind: "Part", title: "Exercises", desc: "Content types available in Sales Programs.", step: "exercises" });
+  [0.7, 0.23, -0.23, -0.7].forEach(y => {
+    const chk = mesh(box(0.28, 0.28, 0.14, 0.05), 0xffffff, ["ex-panel", "all"]);
+    chk.position.copy(V(EX_P.x - 0.6, y, 0.1));
+    chk.material.opacity = 0.3; chk.material.transparent = true;
+    const ln = mesh(box(0.9, 0.12, 0.14, 0.04), 0xffffff, ["ex-panel", "all"]);
+    ln.position.copy(V(EX_P.x + 0.18, y, 0.1));
+    ln.material.opacity = 0.3; ln.material.transparent = true;
+  });
+  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises", "ex-panel"], k.world, V(EX_P.x, -1.5, 0));
+
+  // Spring-animate tiles between collapsed (stacked at center) and exploded (grid)
+  let exActive = false;
+  k.onStep(key => { exActive = (key === "exercises"); });
+  k.onFrame(dt => {
+    const speed = 6 * dt;
+    exTiles.forEach(({ mesh: m, target }) => {
+      const dest = exActive ? target : V(EX_P.x, 0, 0.5);
+      m.position.lerp(dest, Math.min(speed, 1));
+      const sc = exActive ? 1 : 0.01;
+      m.scale.lerp(new THREE.Vector3(sc, sc, sc), Math.min(speed, 1));
+    });
+  });
 
   // ── Milestones: three ascending bars — a bar chart of growing activity ───
   // Short → medium → tall, left to right, like a progress chart building up.
@@ -361,14 +390,14 @@ function buildScene(k) {
 
   const WIDE = { pos: [0, 0.8, 20], look: [0, 0, 0] };
   k.setSteps({
-    overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+    overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
     problem:    { ...WIDE, focus: ["all"], hl: [], labels: [] },
     outcome:    { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path"], hl: ["outcome"], labels: ["outcome"] },
     milestones: { pos: [0, 0.4, 11],  look: [0, 0, 0], focus: ["milestones", "path"], hl: ["milestones"], labels: ["milestones"] },
-    exercises:  { pos: [-5, 0.4, 11], look: [-5, 0, 0], focus: ["exercises", "path"], hl: ["exercises"], labels: ["exercises"] },
-    builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+    exercises:  { pos: [-5, 0.3, 16], look: [-5, 0, 0], focus: ["ex-types", "path"], hl: ["ex-types"], labels: ["ex-types"] },
+    builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
     analytics:  { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path", "milestones"], hl: ["outcome"], labels: ["outcome", "milestones"] },
-    try:        { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+    try:        { ...WIDE, focus: ["*"], hl: [], labels: ["ex-panel", "milestones", "outcome"] },
   });
   story.bindScene(k);
 
