@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Explainers — Salesforce Sales Programs</title>
+<meta name="description" content="How Salesforce Sales Programs ties enablement content to the revenue outcomes it's meant to move." />
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<link rel="stylesheet" href="/kit/explainer.css" />
+<link rel="stylesheet" href="/kit/chrome.css" />
+<style>
+  :root { --page: #0176D3; }
+</style>
+</head>
+<body>
+<header data-kit-topbar></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="kicker">Sales Cloud · Enablement</div>
+      <h1>Salesforce Sales Programs: turn training into <em>revenue outcomes</em></h1>
+      <p class="lede">Sales Programs is an add-on to Sales Cloud that ties enablement content — videos, lessons, practice pitches — to the CRM activity that proves reps are actually changing how they sell. Pick <strong>Service</strong>, <strong>Sales</strong>, or <strong>Marketing</strong> above to change the story.</p>
+    </div>
+    <div class="chips-hero">
+      <div><i style="background:#0176D3"></i><b>Program</b>Outcome + milestones + exercises</div>
+      <div><i style="background:#2E844A"></i><b>Milestone</b>Measured CRM activity</div>
+      <div><i style="background:#B04E0F"></i><b>Analytics</b>Connect behavior to revenue</div>
+    </div>
+  </section>
+
+  <details class="refs" id="references">
+    <summary>
+      <span class="refs__k">Reference material</span>
+      <span class="refs__sum"><b>5 sources</b> used to research this explainer, from Salesforce Trailhead, Salesforce Help, Salesforce Developers, SalesforceBen, and an internal FAQ.</span>
+      <span class="refs__toggle" aria-hidden="true"></span>
+    </summary>
+    <div class="refs__groups">
+      <div class="refs__group">
+        <h3>Salesforce Trailhead</h3>
+        <ul>
+          <li><a href="https://trailhead.salesforce.com/content/learn/modules/saleforce-enablement-basics" target="_blank" rel="noopener">Sales Programs and Partner Tracks Basics</a> <span class="refs__note">45-min module; source for the outcome model, program anatomy, measures, and analytics sections.</span></li>
+          <li><a href="https://trailhead.salesforce.com/content/learn/modules/sales-enablement-quick-look" target="_blank" rel="noopener">Sales Enablement: Quick Look</a> <span class="refs__note">10-min overview; source for the outcome-first philosophy and "in the flow of work" positioning.</span></li>
+        </ul>
+      </div>
+      <div class="refs__group">
+        <h3>SalesforceBen</h3>
+        <ul>
+          <li><a href="https://www.salesforceben.com/drive-enablement-at-scale-with-salesforce-sales-programs/" target="_blank" rel="noopener">Drive Enablement at Scale With Salesforce Sales Programs</a> <span class="refs__note">Andreea Doroftei, June 2024. Source for builder interface details, automation options, and implementation limits (max 300 programs, 100 measures).</span></li>
+        </ul>
+      </div>
+      <div class="refs__group">
+        <h3>Salesforce Developers</h3>
+        <ul>
+          <li><a href="https://developer.salesforce.com/docs/sales/enablement/guide/enablement-data-model.html" target="_blank" rel="noopener">Enablement Data Model</a> <span class="refs__note">Source for design-time and run-time object relationships.</span></li>
+        </ul>
+      </div>
+      <div class="refs__group">
+        <h3>Internal FAQ</h3>
+        <ul>
+          <li><a href="https://salesforce.enterprise.slack.com/docs/T0FHQJR8B/F0AF2J025UG" target="_blank" rel="noopener">Sales Programs FAQ — Top 20 Questions</a> <span class="refs__note">Based on #help-sell-programs-enablement questions Aug 2025–Feb 2026. Source for pricing, limitations, and automation details.</span></li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <section class="story" id="story">
+    <div class="steps">
+
+      <article class="step" data-step="overview"><div class="step-card">
+        <div class="step-k"><i style="background:#0176D3"></i>Overview</div>
+        <h2>One program: content, milestones, and a revenue outcome</h2>
+        <p>A <strong>Sales Program</strong> is a record in Salesforce that bundles three things together: the <strong>exercises</strong> a rep completes (videos, lessons, practice pitches), the <strong>milestones</strong> that measure whether their behavior in the CRM has changed, and the <strong>outcome</strong> — the revenue metric the whole program is designed to move.</p>
+        <p>Today's example is about <strong data-fill="repName"></strong>, working to <strong data-fill="askRead"></strong>.</p>
+      </div></article>
+
+      <article class="step" data-step="problem"><div class="step-card">
+        <div class="step-k"><i style="background:#C23934"></i>The gap</div>
+        <h2>Traditional enablement can't prove it works</h2>
+        <p>Most sales teams run enablement through spreadsheets, slide decks, and LMS links that live outside Salesforce. The problems are predictable.</p>
+        <div class="rows">
+          <div class="row"><i style="background:#C23934"></i><div><b>Disconnected from the job.</b> <span>Content arrives before it's relevant, so reps consume it, forget it, and need it again later.</span></div></div>
+          <div class="row"><i style="background:#C23934"></i><div><b>Hard to track.</b> <span>You can measure completions and views, but you can't tie those numbers to deal size or cycle time.</span></div></div>
+          <div class="row"><i style="background:#C23934"></i><div><b>No feedback loop.</b> <span>If a program isn't working, you don't know which part failed or when.</span></div></div>
+        </div>
+      </div></article>
+
+      <article class="step" data-step="outcome"><div class="step-card">
+        <div class="step-k"><i style="background:#B04E0F"></i>Start with the outcome</div>
+        <h2>Design backward from the revenue metric you want to move</h2>
+        <p>Sales Programs asks you to name a specific, measurable outcome before you touch content. The four most common metrics are <strong>ramp time</strong>, <strong>win rate</strong>, <strong>cycle length</strong>, and <strong>deal size</strong>.</p>
+        <div class="rows">
+          <div class="row"><i style="background:#0176D3"></i><div><b>Ramp time.</b> <span>A new hire closes their first deal in 60 days — count Closed Won opportunities in a time window.</span></div></div>
+          <div class="row"><i style="background:#0176D3"></i><div><b>Win rate.</b> <span>Increase from 10% to 15% — divide deals won by total opportunities in a period.</span></div></div>
+          <div class="row"><i style="background:#0176D3"></i><div><b>Cycle length.</b> <span>Close in under 60 days — count opportunities that close within the target window.</span></div></div>
+          <div class="row"><i style="background:#0176D3"></i><div><b>Deal size.</b> <span>Average above $50K — count opportunities closing above the threshold.</span></div></div>
+        </div>
+      </div></article>
+
+      <article class="step" data-step="milestones"><div class="step-card">
+        <div class="step-k"><i style="background:#2E844A"></i>Milestones</div>
+        <h2>Milestones measure behavior, not content completion</h2>
+        <p>A <strong>milestone</strong> is a goal inside the program that tracks real CRM activity — logged calls, booked meetings, sent emails — rather than whether someone clicked through a slide deck. Each milestone is backed by an <strong>Enablement Measure</strong>: a saved query against any standard or custom Salesforce object.</p>
+        <div class="tools">
+          <code>Task (Subtype = Call)</code><span>Count calls logged against a target — e.g., "30 calls by day 10."</span>
+          <code>Event (Type = Sales Call)</code><span>Count meetings booked — e.g., "1 meeting by day 10."</span>
+          <code>Opportunity (StageName)</code><span>Count opportunities that reach a stage — e.g., "5 deals in Proposal."</span>
+          <code>Custom objects</code><span>Any object in the org can back a measure — log cadences, survey responses, anything.</span>
+        </div>
+        <div class="note">Prebuilt measures ship with the license; copy them rather than editing them, because changes affect every program using that measure.</div>
+      </div></article>
+
+      <article class="step" data-step="exercises"><div class="step-card">
+        <div class="step-k"><i style="background:#0176D3"></i>Exercises</div>
+        <h2>Exercises deliver content exactly when it's relevant</h2>
+        <p>An <strong>exercise</strong> is the content piece a rep completes: a video, a lesson, a document, or a practice pitch. Program Builder lets you drag and drop exercises onto a canvas alongside milestones, grouped into sections, each with a due date. Content appears in the <strong>Guidance Center</strong> — a side panel accessible from every page in Salesforce — so the rep never leaves their workflow.</p>
+        <div class="tools">
+          <code>Video</code><span>YouTube, Vidyard, or Vimeo link — auto-completes when watched.</span>
+          <code>Lesson</code><span>Rich text with estimated reading time — rep must click "Mark as complete."</span>
+          <code>Document / Audio</code><span>Link to a PDF or audio file — auto-completes on access.</span>
+          <code>Feedback Request</code><span>Rep submits a practice pitch; peers or Einstein Coach provide structured feedback.</span>
+          <code>Action Item</code><span>An offline task — shadow a call, attend a briefing — no link required.</span>
+          <code>Trailhead</code><span>Link to any public Trailhead module.</span>
+        </div>
+      </div></article>
+
+      <article class="step" data-step="builder"><div class="step-card">
+        <div class="step-k"><i style="background:#0176D3"></i>Program Builder</div>
+        <h2>Building a program takes minutes, not weeks</h2>
+        <p><strong>Program Builder</strong> is a drag-and-drop canvas inside Lightning Experience. Eight ready-made templates cover the most common sales roles and outcomes, so you rarely start from scratch.</p>
+        <div class="rows">
+          <div class="row"><i style="background:#2E844A"></i><div><b>Templates included.</b> <span>BDR onboarding, AE onboarding, SE onboarding, CSM onboarding, Build a Strong Pipeline, Increase Deal Size, Win More Opportunities, Sell a New Product.</span></div></div>
+          <div class="row"><i style="background:#2E844A"></i><div><b>Publish and assign.</b> <span>Assign users manually, share for self-enrollment, or automate via Flow, Apex, or REST API — including triggers based on KPI misses.</span></div></div>
+          <div class="row"><i style="background:#2E844A"></i><div><b>Notifications built in.</b> <span>In-app and email reminders for program assignment, overdue milestones, approaching due dates, and completion.</span></div></div>
+        </div>
+        <div class="note">Org limits: 300 programs (published or unpublished) and 100 measures. Templates are only available for internal Sales Programs, not Partner Tracks.</div>
+      </div></article>
+
+      <article class="step" data-step="analytics"><div class="step-card">
+        <div class="step-k"><i style="background:#B04E0F"></i>Analytics</div>
+        <h2>Every program generates a dashboard that closes the loop</h2>
+        <p>Publishing a program automatically creates a prebuilt dashboard and a set of reports. The dashboard shows, at a glance, how many reps are on track for each milestone and outcome — and where they're falling behind.</p>
+        <div class="rows">
+          <div class="row"><i style="background:#B04E0F"></i><div><b>Leading indicators.</b> <span>Milestone completion during the program shows whether coaching is landing before the outcome window closes.</span></div></div>
+          <div class="row"><i style="background:#B04E0F"></i><div><b>Lagging indicators.</b> <span>Outcome completion at the end reveals whether behavior change actually moved the revenue metric.</span></div></div>
+          <div class="row"><i style="background:#B04E0F"></i><div><b>Iterate.</b> <span>If reps complete exercises and milestones but the revenue metric doesn't shift, the model tells you which assumption to question next.</span></div></div>
+        </div>
+        <div class="note">Clone the prebuilt dashboard before customizing. Editing it in place removes your ability to reset to the Salesforce default.</div>
+      </div></article>
+
+      <article class="step" data-step="try"><div class="step-card">
+        <div class="step-k"><i style="background:#0176D3"></i>Try it</div>
+        <h2>Run an enablement program</h2>
+        <p>Pick a scenario and a rep, then run the program to see how behavior data connects back to the revenue outcome.</p>
+        <div class="ctl">
+          <div><div class="lab">Outcome</div><div class="opts" id="outcomeOpts"></div></div>
+          <div><div class="lab">Rep status</div><div class="opts" id="statusOpts"></div></div>
+        </div>
+        <button class="run-btn" type="button" data-run><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>Run it</button>
+        <ul class="trace" id="trace"></ul>
+        <div class="note">The rep names and numbers here are illustrative.</div>
+      </div></article>
+
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="stage-frame">
+        <div class="scene" id="scene"></div>
+        <div class="fallback">
+          <div class="fb-box"><b>Exercises</b>Content in flow of work</div><span class="fb-arrow">→</span>
+          <div class="fb-box"><b>Milestones</b>CRM behavior tracked</div><span class="fb-arrow">→</span>
+          <div class="fb-box"><b>Outcome</b>Revenue metric moved</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>What it means for you</h2></div>
+    <div class="cards">
+      <div class="card"><span class="rn">For AEs and reps</span><h3>Guidance surfaces when you need it</h3><p>The Guidance Center appears in a side panel on every Salesforce page. You don't switch tabs or search for content — it shows up when it's due, tied to what you're doing in your pipeline right now.</p></div>
+      <div class="card"><span class="rn">For enablement leaders</span><h3>Prove ROI with data you already have</h3><p>Measures point at objects already in your CRM — Tasks, Events, Opportunities — so there's no separate data pipeline to build. Program analytics arrive the moment you publish.</p></div>
+      <div class="card"><span class="rn">For sales managers</span><h3>Automate coaching when a KPI slips</h3><p>A Flow can watch for a rep missing a milestone — say, fewer than five calls in week one — and automatically assign a remediation program. Coaching happens without a manager having to catch it manually.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Three things people get wrong</h2></div>
+    <div class="cards">
+      <div class="card"><span class="rn">Myth</span><h3>"It's just an LMS inside Salesforce"</h3><p>A traditional LMS tracks content consumption. Sales Programs tracks CRM behavior and ties it to the revenue metric you started from. Content is present, but it's a means to the outcome, not the measure of success.</p></div>
+      <div class="card"><span class="rn">Myth</span><h3>"We need to rebuild all our content"</h3><p>Existing videos, PDFs, and slide decks can be linked directly into exercises. The Enablement workspace holds links and rich text; it doesn't replace your content repository.</p></div>
+      <div class="card"><span class="rn">Myth</span><h3>"Measures require a developer to set up"</h3><p>Prebuilt measures ship with the license and cover the most common activities. Custom measures are created through a point-and-click wizard — pick an object, add field filters, and preview with live data before saving.</p></div>
+    </div>
+  </section>
+
+  <footer><p class="foot-note">Rep names, deal values, KPI targets, and call counts are illustrative. Statuses as of October 2026.</p></footer>
+</main>
+
+<script type="module">
+import { mountSiteChrome } from "/kit/site.js";
+import { initStory, traceLog, sleep } from "/kit/story.js";
+import { createScene } from "/kit/scene.js";
+import { useCase, onUseCase, mountUseCasePickers } from "/kit/usecase.js";
+
+mountSiteChrome("sales-programs");
+mountUseCasePickers();
+
+const BLUE = 0x0176D3, GREEN = 0x2E844A, ORANGE = 0xB04E0F, RED = 0xC23934;
+const YELLOW = 0xF4B942, GREY = 0x747474;
+let srv = null;
+const hex = n => "#" + n.toString(16).padStart(6, "0");
+
+function fillText() {
+  const uc = useCase(), rep = uc.people.rep;
+  const fills = {
+    repName: `${rep.name}, ${rep.role.toLowerCase()}`,
+    askRead: uc.ask.read,
+  };
+  document.querySelectorAll("[data-fill]").forEach(el => { el.textContent = fills[el.dataset.fill] ?? ""; });
+}
+
+// Try-it state
+const pickState = { outcome: "ramp", status: "ontrack" };
+
+const OUTCOMES = {
+  ramp:  { label: "Ramp time",   goal: "Close first deal in 60 days",  metric: "Closed Won count" },
+  win:   { label: "Win rate",    goal: "Increase win rate to 15%",      metric: "Won / total opps" },
+  deal:  { label: "Deal size",   goal: "Average deal above $50K",       metric: "Avg closed-won amount" },
+};
+const STATUSES = {
+  ontrack:  { label: "On track",      color: hex(GREEN) },
+  behind:   { label: "Behind",        color: hex(YELLOW) },
+  stalled:  { label: "No activity",   color: hex(RED) },
+};
+
+function opts(id, items, key) {
+  const el = document.getElementById(id);
+  el.innerHTML = items.map(([v, label, dot]) =>
+    `<button type="button" data-v="${v}" class="${pickState[key] === v ? "on" : ""}">${dot ? `<i style="background:${dot}"></i>` : ""}${label}</button>`
+  ).join("");
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    pickState[key] = b.dataset.v;
+    el.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  }));
+}
+
+function renderControls() {
+  opts("outcomeOpts", Object.entries(OUTCOMES).map(([v, o]) => [v, o.label]), "outcome");
+  opts("statusOpts", Object.entries(STATUSES).map(([v, s]) => [v, s.label, s.color]), "status");
+}
+
+const trace = traceLog(document.getElementById("trace"));
+
+async function run() {
+  const s = { ...pickState };
+  const outcome = OUTCOMES[s.outcome];
+  const status = STATUSES[s.status];
+  const uc = useCase(), rep = uc.people.rep;
+  trace.clear();
+  srv?.reset();
+
+  trace.user(`Program goal: ${outcome.goal}`);
+
+  // Step 1: exercises delivered
+  let st = trace.step("Guidance Center surfaces exercises in Salesforce");
+  await (srv?.toMilestone() ?? sleep(700));
+  st.done(`${rep.first} sees due exercises in the side panel — no tab-switching needed.`);
+
+  // Step 2: milestone check
+  st = trace.step("Milestone check: is the required CRM activity happening?");
+  await (srv?.checkMilestone(s.status !== "stalled") ?? sleep(800));
+
+  switch (s.status) {
+    case "ontrack": {
+      st.done(`Milestone met. ${outcome.metric} is on pace.`);
+      // Step 3: outcome
+      st = trace.step("Outcome evaluation");
+      await (srv?.toOutcome(true) ?? sleep(800));
+      st.done(`“${outcome.goal}” — target reached. Dashboard shows green.`);
+      return;
+    }
+    case "behind": {
+      st.done(`Milestone partially met. ${rep.first} is behind pace — manager notified.`, false);
+      st = trace.step("Automated coaching program assigned via Flow");
+      await (srv?.toOutcome(false) ?? sleep(700));
+      st.done(`Remediation program assigned automatically. Due dates adjusted.`);
+      return;
+    }
+    case "stalled": {
+      st.done(`No qualifying CRM activity in 7 days. Milestone marked overdue.`, true);
+      st = trace.step("Dashboard flags the gap");
+      await (srv?.toOutcome(false) ?? sleep(700));
+      st.done(`Manager sees the gap in the program dashboard. Direct coaching required.`, true);
+      return;
+    }
+    default: throw new Error(`Unhandled status: ${s.status}`);
+  }
+}
+
+const story = initStory({ runLabel: "Run it", onRun: run });
+onUseCase(() => { fillText(); renderControls(); srv?.swap(); });
+
+const kit = await createScene();
+if (kit) srv = buildScene(kit);
+
+function buildScene(k) {
+  const { THREE, V, box, mesh, label, curve, tube, packet, flash, pick, reg } = k;
+
+  // Three pillars: Exercises, Milestones, Outcome
+  const EX_P = V(-5, 0, 0), ML_P = V(0, 0, 0), OUT_P = V(5, 0, 0);
+
+  // Exercises pillar (stack of thin slabs = content library)
+  const exBase = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
+  exBase.position.copy(V(EX_P.x, -0.5, 0));
+  const exMid = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
+  exMid.position.copy(V(EX_P.x, 0, 0));
+  const exTop = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
+  exTop.position.copy(V(EX_P.x, 0.5, 0));
+
+  pick(exBase, { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
+  pick(exMid,  { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
+  pick(exTop,  { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
+
+  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.4, 0));
+
+  // Milestones pillar (taller box = accumulated CRM activity)
+  const mlBox = mesh(box(1.6, 1.8, 1.0, 0.12), GREEN, ["milestones", "all"]);
+  mlBox.position.copy(ML_P);
+  pick(mlBox, { kind: "Part", title: "Milestones", desc: "Measured CRM activity that proves behavior is changing.", step: "milestones" });
+  label(`<i style="background:${hex(GREEN)}"></i><b>Milestones</b><span>CRM behavior tracked</span>`, "lbl--pillar", ["milestones"], k.world, V(ML_P.x, -1.4, 0));
+
+  // Outcome object (cylinder = trophy / gauge)
+  const outCyl = mesh(new THREE.CylinderGeometry(0.7, 0.7, 1.2, 32), ORANGE, ["outcome", "all"]);
+  outCyl.position.copy(OUT_P);
+  pick(outCyl, { kind: "Part", title: "Outcome", desc: "The revenue metric the program is designed to move.", step: "outcome" });
+  label(`<i style="background:${hex(ORANGE)}"></i><b>Outcome</b><span>Revenue metric</span>`, "lbl--pillar", ["outcome"], k.world, V(OUT_P.x, -1.4, 0));
+
+  // Paths
+  const exToMl = curve([V(EX_P.x + 0.95, 0.1, 0), V(-2.3, 0.4, 0.3), V(ML_P.x - 0.85, 0.1, 0)]);
+  const mlToOut = curve([V(ML_P.x + 0.85, 0.1, 0), V(2.3, 0.4, 0.3), V(OUT_P.x - 0.75, 0.1, 0)]);
+  tube(exToMl, BLUE,   ["path", "all"], 0.03, 0.5);
+  tube(mlToOut, GREEN, ["path", "all"], 0.03, 0.5);
+
+  k.onFrame(dt => { if (!k.reduced) outCyl.rotation.y += dt * 0.35; });
+
+  const WIDE = { pos: [0, 0.8, 20], look: [0, 0, 0] };
+  k.setSteps({
+    overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+    problem:    { ...WIDE, focus: ["all"], hl: [], labels: [] },
+    outcome:    { pos: [5, 0.6, 10], look: [5, 0, 0], focus: ["outcome", "path"], hl: ["outcome"], labels: ["outcome"] },
+    milestones: { pos: [0, 0.6, 10],  look: [0, 0, 0], focus: ["milestones", "path"], hl: ["milestones"], labels: ["milestones"] },
+    exercises:  { pos: [-5, 0.6, 10], look: [-5, 0, 0], focus: ["exercises", "path"], hl: ["exercises"], labels: ["exercises"] },
+    builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+    analytics:  { pos: [5, 0.6, 10], look: [5, 0, 0], focus: ["outcome", "path", "milestones"], hl: ["outcome"], labels: ["outcome", "milestones"] },
+    try:        { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
+  });
+  story.bindScene(k);
+
+  return {
+    swap() { k.kick(); },
+    reset() { },
+    toMilestone: () => packet(exToMl, BLUE, 0.8, () => flash("milestones")),
+    checkMilestone: ok => packet(mlToOut, ok ? GREEN : YELLOW, 0.8, () => flash("outcome")),
+    async toOutcome(ok) {
+      flash(ok ? "outcome" : "milestones");
+    },
+  };
+}
+</script>
+</body>
+</html>

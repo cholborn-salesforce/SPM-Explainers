@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Explainers</title>
+<meta name="description" content="Interactive explainers you can present or explore on your own." />
+<link rel="stylesheet" href="/kit/chrome.css" />
+<style>
+  :root {
+    --bg: #f4f6f9; --panel: #fff; --panel-2: #f7f9fc; --border: #e5e5e5; --border-strong: #d8dde6;
+    --text: #181818; --muted: #5c5c5c; --faint: #747474;
+    --accent: #0176D3; --accent-soft: #eaf5fe;
+    --shadow: 0 1px 2px rgba(24,24,24,.04), 0 2px 6px rgba(24,24,24,.04);
+    --shadow-lg: 0 6px 16px rgba(24,24,24,.07), 0 14px 36px rgba(24,24,24,.06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 32px; }
+  header.hero { padding: 64px 0 22px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 650; color: var(--faint); margin-bottom: 26px; }
+  .brand strong { color: var(--text); }
+  .brand svg, .brand img { width: 30px; height: auto; display: block; }
+  h1 { font-size: 48px; line-height: 1.06; letter-spacing: -0.03em; margin: 0 0 16px; font-weight: 750; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 760px; margin: 0 0 22px; }
+  .uc-row { display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); max-width: 760px; }
+  .uc-row > span { flex: 1 1 300px; line-height: 1.5; }
+  .levels { margin-top: 34px; padding: 18px 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); display: grid; gap: 12px; }
+  .levels-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .levels-h b { font-size: 15px; }
+  .levels-h span { font-size: 13.5px; color: var(--faint); }
+  .level-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .level-opts button { font: inherit; font-size: 13.5px; font-weight: 650; color: var(--text); background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: 999px; padding: 7px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+  .level-opts button .n { font-size: 11.5px; font-weight: 700; color: var(--faint); }
+  .level-opts button i { width: 8px; height: 8px; border-radius: 50%; background: var(--lc); }
+  .level-opts button.on { background: color-mix(in srgb, var(--lc, #181818) 10%, #fff); border-color: var(--lc, #181818); }
+  .level-note { font-size: 14px; color: var(--muted); margin: 0; }
+  .lvl { display: inline-block; font-size: 10.5px; font-weight: 750; letter-spacing: .05em; padding: 1px 7px; border-radius: 5px; margin-right: 8px; color: var(--lc); background: color-mix(in srgb, var(--lc) 11%, #fff); border: 1px solid color-mix(in srgb, var(--lc) 28%, #fff); vertical-align: 1px; }
+  .group { margin-top: 44px; }
+  .group-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+  .group-h h2 { font-size: 13px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); margin: 0; }
+  .group-h span { font-size: 13.5px; color: var(--faint); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .card { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; text-decoration: none; color: inherit; box-shadow: var(--shadow); transition: transform .2s ease, box-shadow .2s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .art { height: 180px; position: relative; overflow: hidden; }
+  .art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .card .body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .k { font-size: 11px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+  .card h3 { margin: 0; font-size: 21px; letter-spacing: -0.02em; line-height: 1.2; }
+  .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .go { margin-top: auto; padding-top: 10px; font-weight: 650; font-size: 14px; }
+  footer { margin: 60px 0 0; padding: 24px 0 56px; border-top: 1px solid var(--border); color: var(--faint); font-size: 12.5px; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 36px; } .wrap { padding: 0 18px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="brand"><span id="brandLogo"></span><strong id="brandName"></strong> · Explainers</div>
+    <h1>Explainers, one walkthrough at a time</h1>
+    <p class="lede">Interactive explainers you can present or explore on your own. Each one takes a single idea apart, step by step.</p>
+    <div class="uc-row"><div data-usecase-picker></div><span>Every animated example can follow a Service case, a Sales deal, or a Marketing campaign. Your choice carries across pages.</span></div>
+    <section class="levels" aria-label="Filter by level">
+      <div class="levels-h"><b>Pick a level</b><span>Start with 101, then 201, then 301.</span></div>
+      <div class="level-opts" id="levelOpts" role="group"></div>
+      <p class="level-note" id="levelNote" aria-live="polite"></p>
+    </section>
+  </header>
+
+  <main id="groups"></main>
+
+  <footer id="credit"></footer>
+</div>
+<script type="module">
+import { BRAND, SITE, GROUPS, GROUP_BLURBS, LEVELS, levelOf } from "/kit/site.js";
+import { ART } from "/kit/art.js";
+import { mountUseCasePickers } from "/kit/usecase.js";
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+document.getElementById("brandLogo").innerHTML = BRAND.logo;
+document.getElementById("brandName").textContent = BRAND.name;
+document.getElementById("credit").textContent = `${BRAND.name} · Explainers. ${BRAND.credit}`;
+document.title = `${BRAND.name} — Explainers`;
+
+const rank = s => LEVELS.findIndex(l => l.id === s.level);
+const card = s => {
+  const a = ART[s.slug] || { bg: "linear-gradient(135deg,#f3f6fa,#eef5fc)", svg: "" }, l = levelOf(s.level);
+  return `<a class="card" href="/${s.slug}">
+    <div class="art" style="background:${a.bg}">${a.svg}</div>
+    <div class="body">
+      <div class="k" style="color:${s.color}"><span class="lvl" style="--lc:${l.color}">${l.id}</span>${l.name}</div>
+      <h3>${esc(s.title)}</h3>
+      <p>${esc(s.blurb)}</p>
+      <span class="go" style="color:${s.color}">Open →</span>
+    </div></a>`;
+};
+
+function render(level) {
+  const shown = SITE.filter(s => !level || s.level === level);
+  document.getElementById("groups").innerHTML = GROUPS.map(g => {
+    const cards = shown.filter(s => s.group === g).sort((a, b) => rank(a) - rank(b));
+    return cards.length ? `
+  <section class="group">
+    <div class="group-h"><h2>${g}</h2><span>${GROUP_BLURBS[g] ?? ""}</span></div>
+    <div class="grid">${cards.map(card).join("")}</div>
+  </section>` : "";
+  }).join("");
+  document.querySelectorAll("#levelOpts button").forEach(b => {
+    const on = b.dataset.level === (level || "");
+    b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on));
+  });
+  const l = levelOf(level);
+  document.getElementById("levelNote").textContent = l
+    ? `${l.id} · ${l.name}. ${l.blurb}`
+    : `All ${SITE.length} explainers, grouped by topic. Within each topic, 101 comes first.`;
+}
+
+function setLevel(level) {
+  const url = new URL(location.href);
+  if (level) url.searchParams.set("level", level); else url.searchParams.delete("level");
+  history.replaceState(null, "", url);
+  render(level);
+}
+
+document.getElementById("levelOpts").innerHTML =
+  `<button type="button" data-level="">All <span class="n">${SITE.length}</span></button>` +
+  LEVELS.map(l => `<button type="button" data-level="${l.id}" style="--lc:${l.color}"><i></i>${l.id} ${l.name} <span class="n">${SITE.filter(s => s.level === l.id).length}</span></button>`).join("");
+document.querySelectorAll("#levelOpts button").forEach(b => b.addEventListener("click", () => setLevel(b.dataset.level)));
+
+const initial = new URLSearchParams(location.search).get("level");
+render(levelOf(initial) ? initial : "");
+mountUseCasePickers();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Explainers — How a request travels</title>
+<meta name="description" content="One request from an app to a server and back, and who it runs as." />
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<link rel="stylesheet" href="/kit/explainer.css" />
+<link rel="stylesheet" href="/kit/chrome.css" />
+<style>
+  :root { --page: #0B5CAB; }
+</style>
+</head>
+<body>
+<header data-kit-topbar></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="kicker">Basics · A starter page to copy</div>
+      <h1>How a <em>request</em> travels</h1>
+      <p class="lede">An app asks a server for something, the server checks who's asking, reads the data, and answers. Pick <strong>Service</strong>, <strong>Sales</strong>, or <strong>Marketing</strong> at the top to change the story.</p>
+    </div>
+    <div class="chips-hero">
+      <div><i style="background:#0B5CAB"></i><b>App</b>Sends the request</div>
+      <div><i style="background:#3b4a63"></i><b>Server</b>Checks who's asking</div>
+      <div><i style="background:#0B8A9E"></i><b>Data</b>Only what that person may see</div>
+    </div>
+  </section>
+
+  <details class="refs" id="references">
+    <summary>
+      <span class="refs__k">Reference material</span>
+      <span class="refs__sum"><b>1 source</b> used to research this explainer and from Publisher.</span>
+      <span class="refs__toggle" aria-hidden="true"></span>
+    </summary>
+    <div class="refs__groups">
+      <div class="refs__group">
+        <h3>Publisher</h3>
+        <ul>
+          <li><a href="https://example.com/" target="_blank" rel="noopener">Source title</a> <span class="refs__note">Date, or what this source confirmed</span></li>
+        </ul>
+      </div>
+    </div>
+  </details>
+
+  <section class="story" id="story">
+    <div class="steps">
+      <article class="step" data-step="overview"><div class="step-card">
+        <div class="step-k"><i style="background:#0B5CAB"></i>Overview</div>
+        <h2>Three parts, one round trip</h2>
+        <p>On the left is the <strong>app</strong> a person uses. In the middle is the <strong>server</strong>. On the right is the <strong>data</strong> it keeps. Every request goes app to server to data, and the answer comes back the same way.</p>
+        <p>Today's ask comes from <strong data-fill="repName"></strong>: <strong data-fill="askRead"></strong></p>
+      </div></article>
+
+      <article class="step" data-step="identity"><div class="step-card">
+        <div class="step-k"><i style="background:#3b4a63"></i>Who's asking</div>
+        <h2>The server checks who's asking first</h2>
+        <p>Each request carries a <strong>token</strong> that says who sent it. The server reads it before doing anything, and runs the request as that person.</p>
+        <div class="rows">
+          <div class="row"><i style="background:#2E844A"></i><div><b>Signed in.</b> <span data-fill="asRep"></span></div></div>
+          <div class="row"><i style="background:#C23934"></i><div><b>No token.</b> <span>The server refuses, and nothing is read.</span></div></div>
+        </div>
+      </div></article>
+
+      <article class="step" data-step="data"><div class="step-card">
+        <div class="step-k"><i style="background:#0B8A9E"></i>The data</div>
+        <h2>It reads only what that person may see</h2>
+        <p>The server looks up <strong data-fill="record"></strong> and returns only the fields this person is allowed to see.</p>
+        <div class="note">The records and names on this page are illustrative.</div>
+      </div></article>
+
+      <article class="step" data-step="try"><div class="step-card">
+        <div class="step-k"><i style="background:#0B5CAB"></i>Try it</div>
+        <h2>Send a request</h2>
+        <div class="ctl">
+          <div><div class="lab">Token</div><div class="opts" id="tokenOpts"></div></div>
+        </div>
+        <button class="run-btn" type="button" data-run><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>Run it</button>
+        <ul class="trace" id="trace"></ul>
+      </div></article>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="stage-frame">
+        <div class="scene" id="scene"></div>
+        <div class="fallback">
+          <div class="fb-box"><b>App</b>Sends the request</div><span class="fb-arrow">→</span>
+          <div class="fb-box"><b>Server</b>Checks who's asking</div><span class="fb-arrow">→</span>
+          <div class="fb-box"><b>Data</b>Only what they may see</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Two things people get wrong</h2></div>
+    <div class="cards">
+      <div class="card"><span class="rn">Myth</span><h3>"The app decides what I can see"</h3><p>The server decides, from the token. The app only shows what comes back.</p></div>
+      <div class="card"><span class="rn">Myth</span><h3>"No token means read-only"</h3><p>No token means nothing at all.</p></div>
+    </div>
+  </section>
+
+  <footer><p class="foot-note">Explainers. The records and names are illustrative.</p></footer>
+</main>
+
+<script type="module">
+import { mountSiteChrome } from "/kit/site.js";
+import { initStory, traceLog, sleep } from "/kit/story.js";
+import { createScene } from "/kit/scene.js";
+import { useCase, onUseCase, mountUseCasePickers } from "/kit/usecase.js";
+
+mountSiteChrome("example");
+mountUseCasePickers();
+
+const APP = 0x0B5CAB, SRV = 0x3b4a63, DATA = 0x0B8A9E, OK = 0x2E844A, ROSE = 0xC23934;
+let srv = null;
+const hex = n => "#" + n.toString(16).padStart(6, "0");
+
+function fillText() {
+  const uc = useCase(), rep = uc.people.rep;
+  const fills = {
+    repName: `${rep.name}, ${rep.role.toLowerCase()}`, askRead: `“${uc.ask.read}”`, record: uc.record.name,
+    asRep: `The server runs the request as ${rep.first}, with ${rep.first}'s access.`,
+  };
+  document.querySelectorAll("[data-fill]").forEach(el => { el.textContent = fills[el.dataset.fill] ?? ""; });
+}
+
+const pickState = { token: "signed" };
+function opts(id, items, key) {
+  const el = document.getElementById(id);
+  el.innerHTML = items.map(([v, label, dot]) => `<button type="button" data-v="${v}" class="${pickState[key] === v ? "on" : ""}">${dot ? `<i style="background:${dot}"></i>` : ""}${label}</button>`).join("");
+  el.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    pickState[key] = b.dataset.v;
+    el.querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+  }));
+}
+function renderControls() {
+  opts("tokenOpts", [["signed", `Signed in as ${useCase().people.rep.first}`, hex(OK)], ["none", "No token", hex(ROSE)]], "token");
+}
+
+const trace = traceLog(document.getElementById("trace"));
+async function run() {
+  const uc = useCase(), rep = uc.people.rep, s = { ...pickState };
+  trace.clear();
+  srv?.reset();
+  trace.user(uc.ask.read);
+  let st = trace.step("The app sends the request");
+  await (srv?.toServer() ?? sleep(800));
+  switch (s.token) {
+    case "signed": {
+      st.done(`With ${rep.first}'s token.`);
+      st = trace.step("The server reads the data");
+      await (srv?.toData(true) ?? sleep(800));
+      st.done(`As ${rep.first}: ${uc.record.headline}`);
+      st = trace.step("The answer comes back");
+      await (srv?.back(true) ?? sleep(800));
+      st.done(uc.answer);
+      return;
+    }
+    case "none": {
+      st.done("With no token.", true);
+      st = trace.step("The server refuses");
+      await (srv?.back(false) ?? sleep(800));
+      st.done("401 Unauthorized. Nothing was read.", true);
+      return;
+    }
+    default: throw new Error(`Unhandled token option: ${s.token}`);
+  }
+}
+
+const story = initStory({ runLabel: "Run it", onRun: run });
+onUseCase(() => { fillText(); renderControls(); srv?.swap(); });
+
+const kit = await createScene();
+if (kit) srv = buildScene(kit);
+
+function buildScene(k) {
+  const { THREE, V, box, mesh, label, curve, tube, packet, flash, pick } = k;
+  const setText = (lb, html) => { lb.element.querySelector(".lbl-in").innerHTML = html; };
+  const rev = c => curve(c.points.slice().reverse());
+  const APP_P = V(-4, 0, 0), SRV_P = V(0, 0, 0), DATA_P = V(4, 0, 0);
+
+  const app = mesh(box(1.6, 1.1, 0.3, 0.1), APP, ["app"]);
+  app.position.copy(APP_P);
+  pick(app, { kind: "Part", title: "The app", desc: "What the person uses. It sends the request.", step: "overview" });
+  const appLb = label("", "", ["app"], k.world, V(APP_P.x, APP_P.y - 1.0, 0.3));
+
+  const server = mesh(box(1.3, 1.6, 1.0, 0.12), SRV, ["server"]);
+  server.position.copy(SRV_P);
+  pick(server, { kind: "Part", title: "The server", desc: "Checks the token, then runs the request as that person.", step: "identity" });
+  label(`<i style="background:${hex(SRV)}"></i><b>Server</b><span>checks who's asking</span>`, "", ["server"], k.world, V(SRV_P.x, SRV_P.y - 1.25, 0.3));
+
+  const db = mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.1, 32), DATA, ["data"]);
+  db.position.copy(DATA_P);
+  pick(db, { kind: "Part", title: "The data", desc: "Only what the signed-in person may see comes back.", step: "data" });
+  const dataLb = label("", "", ["data"], k.world, V(DATA_P.x, DATA_P.y - 1.0, 0.3));
+
+  const reqCv = curve([V(APP_P.x + 0.85, 0.2, 0), V(-2, 0.5, 0.2), V(SRV_P.x - 0.7, 0.2, 0)]);
+  const dataCv = curve([V(SRV_P.x + 0.7, 0.2, 0), V(2, 0.5, 0.2), V(DATA_P.x - 0.7, 0.2, 0)]);
+  tube(reqCv, APP, ["path"], 0.03, 0.5);
+  tube(dataCv, DATA, ["path"], 0.03, 0.5);
+
+  function paint() {
+    const uc = useCase();
+    setText(appLb, `<i style="background:${hex(APP)}"></i><b>App</b><span>${uc.people.rep.name}</span>`);
+    setText(dataLb, `<i style="background:${hex(DATA)}"></i><b>Data</b><span>${uc.record.headline}</span>`);
+  }
+  paint();
+
+  k.onFrame(dt => { if (!k.reduced) db.rotation.y += dt * 0.4; });
+
+  const WIDE = { pos: [0, 0.6, 14], look: [0, 0, 0] };
+  k.setSteps({
+    overview: { ...WIDE, focus: ["*"], hl: [], labels: ["app", "server", "data"] },
+    identity: { pos: [-1.5, 0.4, 9], look: [-1.5, 0, 0], focus: ["app", "server", "path"], hl: ["server"], labels: ["app", "server"] },
+    data:     { pos: [2, 0.4, 9], look: [2, 0, 0], focus: ["server", "data", "path"], hl: ["data"], labels: ["server", "data"] },
+    try:      { ...WIDE, focus: ["*"], hl: [], labels: ["app", "server", "data"] },
+  });
+  story.bindScene(k);
+
+  return {
+    swap() { paint(); flash("app"); k.kick(); },
+    reset() { paint(); },
+    toServer: () => packet(reqCv, APP, 0.8, () => flash("server")),
+    toData: ok => packet(dataCv, ok ? DATA : ROSE, 0.8, () => flash("data")),
+    async back(ok) {
+      if (ok) await packet(rev(dataCv), OK, 0.8, () => flash("server"));
+      await packet(rev(reqCv), ok ? OK : ROSE, 0.8, () => flash("app"));
+    },
+  };
+}
+</script>
+</body>
+</html>
