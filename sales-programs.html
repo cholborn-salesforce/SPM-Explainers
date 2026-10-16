@@ -299,54 +299,71 @@ const kit = await createScene();
 if (kit) srv = buildScene(kit);
 
 function buildScene(k) {
-  const { THREE, V, box, mesh, label, curve, tube, packet, flash, pick, reg } = k;
+  const { THREE, V, box, mesh, label, curve, tube, packet, flash, pick } = k;
 
-  // Three pillars: Exercises, Milestones, Outcome
   const EX_P = V(-5, 0, 0), ML_P = V(0, 0, 0), OUT_P = V(5, 0, 0);
 
-  // Exercises pillar (stack of thin slabs = content library)
-  const exBase = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
-  exBase.position.copy(V(EX_P.x, -0.5, 0));
-  const exMid = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
-  exMid.position.copy(V(EX_P.x, 0, 0));
-  const exTop = mesh(box(1.8, 0.35, 0.9, 0.08), BLUE, ["exercises", "all"]);
-  exTop.position.copy(V(EX_P.x, 0.5, 0));
+  // ── Exercises: three content cards fanned out at angles ──────────────────
+  // Like slides or cards spread on a table — suggests a content library.
+  const cardGeo = box(1.5, 1.0, 0.08, 0.07);
+  const exDesc = { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" };
+  const exBack = mesh(cardGeo, BLUE, ["exercises", "all"]);
+  exBack.position.copy(V(EX_P.x - 0.28, 0, -0.1));
+  exBack.rotation.y = -0.38;
+  exBack.material.opacity = 0.55; exBack.material.transparent = true;
+  pick(exBack, exDesc);
 
-  pick(exBase, { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
-  pick(exMid,  { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
-  pick(exTop,  { kind: "Part", title: "Exercises", desc: "Videos, lessons, documents, and practice pitches in the Guidance Center.", step: "exercises" });
+  const exFront = mesh(cardGeo, BLUE, ["exercises", "all"]);
+  exFront.position.copy(V(EX_P.x + 0.28, 0, -0.1));
+  exFront.rotation.y = 0.38;
+  exFront.material.opacity = 0.55; exFront.material.transparent = true;
+  pick(exFront, exDesc);
 
-  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.4, 0));
+  const exCenter = mesh(cardGeo, BLUE, ["exercises", "all"]);
+  exCenter.position.copy(V(EX_P.x, 0, 0.2));
+  pick(exCenter, exDesc);
 
-  // Milestones pillar (taller box = accumulated CRM activity)
-  const mlBox = mesh(box(1.6, 1.8, 1.0, 0.12), GREEN, ["milestones", "all"]);
-  mlBox.position.copy(ML_P);
-  pick(mlBox, { kind: "Part", title: "Milestones", desc: "Measured CRM activity that proves behavior is changing.", step: "milestones" });
-  label(`<i style="background:${hex(GREEN)}"></i><b>Milestones</b><span>CRM behavior tracked</span>`, "lbl--pillar", ["milestones"], k.world, V(ML_P.x, -1.4, 0));
+  label(`<i style="background:${hex(BLUE)}"></i><b>Exercises</b><span>Content in Guidance Center</span>`, "lbl--pillar", ["exercises"], k.world, V(EX_P.x, -1.3, 0));
 
-  // Outcome object (cylinder = trophy / gauge)
-  const outCyl = mesh(new THREE.CylinderGeometry(0.7, 0.7, 1.2, 32), ORANGE, ["outcome", "all"]);
-  outCyl.position.copy(OUT_P);
-  pick(outCyl, { kind: "Part", title: "Outcome", desc: "The revenue metric the program is designed to move.", step: "outcome" });
+  // ── Milestones: three ascending bars — a bar chart of growing activity ───
+  // Short → medium → tall, left to right, like a progress chart building up.
+  const barDesc = { kind: "Part", title: "Milestones", desc: "Measured CRM activity that proves behavior is changing.", step: "milestones" };
+  const bar1 = mesh(box(0.42, 0.6, 0.42, 0.06), GREEN, ["milestones", "all"]);
+  bar1.position.copy(V(ML_P.x - 0.6, -0.6, 0));
+  pick(bar1, barDesc);
+  const bar2 = mesh(box(0.42, 1.1, 0.42, 0.06), GREEN, ["milestones", "all"]);
+  bar2.position.copy(V(ML_P.x, -0.35, 0));
+  pick(bar2, barDesc);
+  const bar3 = mesh(box(0.42, 1.7, 0.42, 0.06), GREEN, ["milestones", "all"]);
+  bar3.position.copy(V(ML_P.x + 0.6, -0.05, 0));
+  pick(bar3, barDesc);
+
+  label(`<i style="background:${hex(GREEN)}"></i><b>Milestones</b><span>CRM behavior tracked</span>`, "lbl--pillar", ["milestones"], k.world, V(ML_P.x, -1.7, 0));
+
+  // ── Outcome: a diamond / gem — achievement and revenue value ─────────────
+  const outGem = mesh(new THREE.OctahedronGeometry(0.9, 0), ORANGE, ["outcome", "all"]);
+  outGem.position.copy(OUT_P);
+  outGem.rotation.y = Math.PI / 8;
+  pick(outGem, { kind: "Part", title: "Outcome", desc: "The revenue metric the program is designed to move.", step: "outcome" });
   label(`<i style="background:${hex(ORANGE)}"></i><b>Outcome</b><span>Revenue metric</span>`, "lbl--pillar", ["outcome"], k.world, V(OUT_P.x, -1.4, 0));
 
-  // Paths
+  // ── Paths ─────────────────────────────────────────────────────────────────
   const exToMl = curve([V(EX_P.x + 0.95, 0.1, 0), V(-2.3, 0.4, 0.3), V(ML_P.x - 0.85, 0.1, 0)]);
-  const mlToOut = curve([V(ML_P.x + 0.85, 0.1, 0), V(2.3, 0.4, 0.3), V(OUT_P.x - 0.75, 0.1, 0)]);
+  const mlToOut = curve([V(ML_P.x + 0.85, 0.1, 0), V(2.3, 0.4, 0.3), V(OUT_P.x - 0.95, 0.1, 0)]);
   tube(exToMl, BLUE,   ["path", "all"], 0.03, 0.5);
   tube(mlToOut, GREEN, ["path", "all"], 0.03, 0.5);
 
-  k.onFrame(dt => { if (!k.reduced) outCyl.rotation.y += dt * 0.35; });
+  k.onFrame(dt => { if (!k.reduced) outGem.rotation.y += dt * 0.4; });
 
   const WIDE = { pos: [0, 0.8, 20], look: [0, 0, 0] };
   k.setSteps({
     overview:   { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
     problem:    { ...WIDE, focus: ["all"], hl: [], labels: [] },
-    outcome:    { pos: [5, 0.6, 10], look: [5, 0, 0], focus: ["outcome", "path"], hl: ["outcome"], labels: ["outcome"] },
-    milestones: { pos: [0, 0.6, 10],  look: [0, 0, 0], focus: ["milestones", "path"], hl: ["milestones"], labels: ["milestones"] },
-    exercises:  { pos: [-5, 0.6, 10], look: [-5, 0, 0], focus: ["exercises", "path"], hl: ["exercises"], labels: ["exercises"] },
+    outcome:    { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path"], hl: ["outcome"], labels: ["outcome"] },
+    milestones: { pos: [0, 0.4, 11],  look: [0, 0, 0], focus: ["milestones", "path"], hl: ["milestones"], labels: ["milestones"] },
+    exercises:  { pos: [-5, 0.4, 11], look: [-5, 0, 0], focus: ["exercises", "path"], hl: ["exercises"], labels: ["exercises"] },
     builder:    { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
-    analytics:  { pos: [5, 0.6, 10], look: [5, 0, 0], focus: ["outcome", "path", "milestones"], hl: ["outcome"], labels: ["outcome", "milestones"] },
+    analytics:  { pos: [5, 0.8, 11], look: [5, 0, 0], focus: ["outcome", "path", "milestones"], hl: ["outcome"], labels: ["outcome", "milestones"] },
     try:        { ...WIDE, focus: ["*"], hl: [], labels: ["exercises", "milestones", "outcome"] },
   });
   story.bindScene(k);
