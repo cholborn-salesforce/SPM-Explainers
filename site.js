@@ -28,7 +28,7 @@ export const levelOf = id => LEVELS.find(l => l.id === id);
 // The reading path: every 101, then every 201, then every 301.
 export const PATH = LEVELS.flatMap(l => SITE.filter(s => s.level === l.id));
 
-import { mountUseCasePickers } from "/kit/usecase.js";
+import { mountUseCasePickers } from "/SPM-Explainers/kit/usecase.js";
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const levelTag = s => { const l = levelOf(s.level); return `<span class="kit-level" style="--lc:${l.color}" title="${l.id} · ${l.name}">${l.id}</span>`; };
@@ -40,11 +40,11 @@ export function mountSiteChrome(current, { usecase = true } = {}) {
   const bar = document.querySelector("[data-kit-topbar]");
   if (bar) {
     const menu = GROUPS.map(g => `<div class="kit-menu__group"><div class="kit-menu__label">${g}</div>${
-      SITE.filter(s => s.group === g).map(s => `<a href="/${s.slug}" class="${s.slug === current ? "on" : ""}"><i style="background:${s.color}"></i>${esc(s.title)}${levelTag(s)}</a>`).join("")
+      SITE.filter(s => s.group === g).map(s => `<a href="/SPM-Explainers/${s.slug}" class="${s.slug === current ? "on" : ""}"><i style="background:${s.color}"></i>${esc(s.title)}${levelTag(s)}</a>`).join("")
     }</div>`).join("");
     bar.className = "topbar";
     bar.innerHTML = `<div class="topbar-inner">
-      <a class="bc" href="/"><span class="kit-logo">${BRAND.logo}</span><strong>${esc(BRAND.name)}</strong>${page ? `<span class="bc-title">/ ${esc(page.title)}</span>${levelTag(page)}` : ""}</a>
+      <a class="bc" href="/SPM-Explainers/"><span class="kit-logo">${BRAND.logo}</span><strong>${esc(BRAND.name)}</strong>${page ? `<span class="bc-title">/ ${esc(page.title)}</span>${levelTag(page)}` : ""}</a>
       <div class="top-links">
         ${usecase ? `<div data-usecase-picker></div>` : ""}
         <div class="kit-menu">
@@ -67,11 +67,11 @@ export function mountSiteChrome(current, { usecase = true } = {}) {
     const nl = levelOf(next.level), step = next.level === page.level ? "Up next" : `Next level · ${nl.id} ${nl.name}`;
     const up = document.createElement("section");
     up.className = "kit-next";
-    up.innerHTML = `<a href="/${next.slug}" class="kit-next__card" style="--c:${next.color}">
+    up.innerHTML = `<a href="/SPM-Explainers/${next.slug}" class="kit-next__card" style="--c:${next.color}">
       <span class="kit-next__k">${step} · ${esc(next.group)}</span>
       <b>${esc(next.title)} →</b><span>${esc(next.blurb)}</span></a>
-      <a href="/?level=${page.level}" class="kit-next__all">All ${page.level} explainers</a>
-      <a href="/" class="kit-next__all">See all ${SITE.length} explainers</a>`;
+      <a href="/SPM-Explainers/?level=${page.level}" class="kit-next__all">All ${page.level} explainers</a>
+      <a href="/SPM-Explainers/" class="kit-next__all">See all ${SITE.length} explainers</a>`;
     footer.before(up);
     if (BRAND.credit && !footer.textContent.includes(BRAND.credit)) (footer.querySelector(".foot-note") || footer).insertAdjacentHTML("beforeend", ` ${esc(BRAND.credit)}.`);
   }

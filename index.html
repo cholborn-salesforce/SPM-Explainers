@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Explainers</title>
 <meta name="description" content="Interactive explainers you can present or explore on your own." />
-<link rel="stylesheet" href="/kit/chrome.css" />
+<link rel="stylesheet" href="/SPM-Explainers/kit/chrome.css" />
 <style>
   :root {
     --bg: #f4f6f9; --panel: #fff; --panel-2: #f7f9fc; --border: #e5e5e5; --border-strong: #d8dde6;
@@ -75,9 +75,9 @@
   <footer id="credit"></footer>
 </div>
 <script type="module">
-import { BRAND, SITE, GROUPS, GROUP_BLURBS, LEVELS, levelOf } from "/kit/site.js";
-import { ART } from "/kit/art.js";
-import { mountUseCasePickers } from "/kit/usecase.js";
+import { BRAND, SITE, GROUPS, GROUP_BLURBS, LEVELS, levelOf } from "/SPM-Explainers/kit/site.js";
+import { ART } from "/SPM-Explainers/kit/art.js";
+import { mountUseCasePickers } from "/SPM-Explainers/kit/usecase.js";
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 document.getElementById("brandLogo").innerHTML = BRAND.logo;
