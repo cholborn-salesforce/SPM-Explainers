@@ -88,7 +88,7 @@ document.title = `${BRAND.name} — Explainers`;
 const rank = s => LEVELS.findIndex(l => l.id === s.level);
 const card = s => {
   const a = ART[s.slug] || { bg: "linear-gradient(135deg,#f3f6fa,#eef5fc)", svg: "" }, l = levelOf(s.level);
-  return `<a class="card" href="/${s.slug}">
+  return `<a class="card" href="/SPM-Explainers/${s.slug}">
     <div class="art" style="background:${a.bg}">${a.svg}</div>
     <div class="body">
       <div class="k" style="color:${s.color}"><span class="lvl" style="--lc:${l.color}">${l.id}</span>${l.name}</div>
