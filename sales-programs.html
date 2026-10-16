@@ -76,7 +76,6 @@
         <div class="step-k"><i style="background:#0176D3"></i>Overview</div>
         <h2>One program: content, milestones, and a revenue outcome</h2>
         <p>A <strong>Sales Program</strong> is a record in Salesforce that bundles three things together: the <strong>exercises</strong> a rep completes (videos, lessons, practice pitches), the <strong>milestones</strong> that measure whether their behavior in the CRM has changed, and the <strong>outcome</strong> — the revenue metric the whole program is designed to move.</p>
-        <p>Today's example is about <strong data-fill="repName"></strong>, working to <strong data-fill="askRead"></strong>.</p>
       </div></article>
 
       <article class="step" data-step="problem"><div class="step-card">
@@ -215,15 +214,6 @@ const YELLOW = 0xF4B942, GREY = 0x747474;
 let srv = null;
 const hex = n => "#" + n.toString(16).padStart(6, "0");
 
-function fillText() {
-  const uc = useCase(), rep = uc.people.rep;
-  const fills = {
-    repName: `${rep.name}, ${rep.role.toLowerCase()}`,
-    askRead: uc.ask.read,
-  };
-  document.querySelectorAll("[data-fill]").forEach(el => { el.textContent = fills[el.dataset.fill] ?? ""; });
-}
-
 // Try-it state
 const pickState = { outcome: "ramp", status: "ontrack" };
 
@@ -303,7 +293,7 @@ async function run() {
 }
 
 const story = initStory({ runLabel: "Run it", onRun: run });
-onUseCase(() => { fillText(); renderControls(); srv?.swap(); });
+onUseCase(() => { renderControls(); srv?.swap(); });
 
 const kit = await createScene();
 if (kit) srv = buildScene(kit);
