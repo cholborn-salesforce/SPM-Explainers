@@ -1,0 +1,12 @@
+// Card art for the landing page, one small illustration per explainer.
+// Each entry is a CSS background plus an inline SVG drawn on a 520 × 210 viewBox.
+export const ART = {
+ "example": {
+  "bg": "linear-gradient(135deg, #EAF2FB 0%, #DCEBF8 100%)",
+  "svg": "<svg viewBox=\"0 0 520 210\" aria-hidden=\"true\"><rect x=\"60\" y=\"70\" width=\"110\" height=\"70\" rx=\"12\" fill=\"#0B5CAB\"/><rect x=\"76\" y=\"88\" width=\"60\" height=\"8\" rx=\"4\" fill=\"#fff\" opacity=\".8\"/><rect x=\"76\" y=\"104\" width=\"40\" height=\"8\" rx=\"4\" fill=\"#fff\" opacity=\".55\"/><path d=\"M176 96 H330\" stroke=\"#0B5CAB\" stroke-width=\"3\" stroke-dasharray=\"6 6\"/><path d=\"M330 116 H176\" stroke=\"#2E844A\" stroke-width=\"3\" stroke-dasharray=\"6 6\"/><circle cx=\"250\" cy=\"96\" r=\"7\" fill=\"#0B5CAB\"/><rect x=\"340\" y=\"62\" width=\"100\" height=\"86\" rx=\"12\" fill=\"#3b4a63\"/><rect x=\"356\" y=\"80\" width=\"68\" height=\"10\" rx=\"4\" fill=\"#fff\" opacity=\".7\"/><rect x=\"356\" y=\"98\" width=\"68\" height=\"10\" rx=\"4\" fill=\"#fff\" opacity=\".5\"/><rect x=\"356\" y=\"116\" width=\"68\" height=\"10\" rx=\"4\" fill=\"#fff\" opacity=\".35\"/></svg>"
+ },
+ "sales-programs": {
+  "bg": "linear-gradient(135deg, #E8F4FF 0%, #D0E8FF 100%)",
+  "svg": "<svg viewBox=\"0 0 520 210\" aria-hidden=\"true\"><rect x=\"40\" y=\"80\" width=\"28\" height=\"50\" rx=\"5\" fill=\"#0176D3\" opacity=\".9\"/><rect x=\"74\" y=\"68\" width=\"28\" height=\"62\" rx=\"5\" fill=\"#0176D3\"/><rect x=\"108\" y=\"74\" width=\"28\" height=\"56\" rx=\"5\" fill=\"#0176D3\" opacity=\".8\"/><path d=\"M148 105 H232\" stroke=\"#0176D3\" stroke-width=\"3\" stroke-dasharray=\"6 5\"/><circle cx=\"190\" cy=\"105\" r=\"6\" fill=\"#0176D3\"/><rect x=\"240\" y=\"65\" width=\"90\" height=\"80\" rx=\"12\" fill=\"#2E844A\"/><rect x=\"255\" y=\"82\" width=\"60\" height=\"9\" rx=\"4\" fill=\"#fff\" opacity=\".8\"/><rect x=\"255\" y=\"97\" width=\"42\" height=\"9\" rx=\"4\" fill=\"#fff\" opacity=\".6\"/><rect x=\"255\" y=\"112\" width=\"52\" height=\"9\" rx=\"4\" fill=\"#fff\" opacity=\".45\"/><path d=\"M338 105 H398\" stroke=\"#2E844A\" stroke-width=\"3\" stroke-dasharray=\"6 5\"/><circle cx=\"368\" cy=\"105\" r=\"6\" fill=\"#2E844A\"/><ellipse cx=\"436\" cy=\"105\" rx=\"44\" ry=\"38\" fill=\"#B04E0F\" opacity=\".15\"/><ellipse cx=\"436\" cy=\"105\" rx=\"32\" ry=\"27\" fill=\"#B04E0F\" opacity=\".3\"/><ellipse cx=\"436\" cy=\"105\" rx=\"20\" ry=\"17\" fill=\"#B04E0F\"/><rect x=\"428\" y=\"97\" width=\"16\" height=\"16\" rx=\"3\" fill=\"#fff\" opacity=\".85\"/></svg>"
+ },
+};
